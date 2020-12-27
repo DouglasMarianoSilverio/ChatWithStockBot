@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CWSB.Services.Api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace CWSB.Services.Api
 {
@@ -31,15 +26,16 @@ namespace CWSB.Services.Api
             //{
             //    builder.AddUserSecrets<Startup>();
             //}
-            
+
             Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
 
+            //identity
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -47,14 +43,35 @@ namespace CWSB.Services.Api
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
+
+            services.AddAuthentication(options =>
+            {
+
+            });
+
+
+
             services.AddControllers();
 
+            services.AddSwaggerGen(
+                o => o.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Chat With Stocks Bot",
+                    Description = "This APi will allow users to chat and call a bot to get stocks information.",
+                    Contact = new OpenApiContact() { Name = "Douglas Mariano Silverio", Email = "douglas072gmail.com" },
+                    License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licences/MIT") }
+                }));
 
         }
-                
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(o =>
+            {
+                o.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

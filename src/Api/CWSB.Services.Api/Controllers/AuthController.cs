@@ -72,7 +72,7 @@ namespace CWSB.Services.Api.Controllers
                 AddOperationError("Invalid User/Password.");
             }
 
-            return CustomResponse();
+            return CustomResponse("ok");
 
         }
     }
