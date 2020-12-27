@@ -30,8 +30,10 @@ namespace CWSB.Services.Api.Controllers
 
         private bool ValidOperation()
         {
-            throw new NotImplementedException();
+            return !(Errors.Any());
         }
+
+        //protected void AddModelValidationErrors(List<>)
 
         protected void AddOperationError(string error)
         {
