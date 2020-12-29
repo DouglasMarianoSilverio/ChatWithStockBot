@@ -37,6 +37,9 @@ namespace CWSB.Services.Api
 
             services.AddSwaggerConfiguration();
 
+            services.RegisterServices();
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

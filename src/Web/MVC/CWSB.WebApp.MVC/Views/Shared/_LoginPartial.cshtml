@@ -1,5 +1,5 @@
-﻿@using CWSB.WebApp.MVC.Extensions
-@inject IUser AppUser
+﻿@using CWSB.Core.User
+@inject IAspNetUser AppUser
 
 <ul class="navbar-nav">
     @if (AppUser.IsAuthenticated())    

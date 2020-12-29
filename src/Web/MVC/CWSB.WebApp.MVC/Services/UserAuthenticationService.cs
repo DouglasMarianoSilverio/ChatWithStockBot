@@ -1,5 +1,6 @@
-﻿using CWSB.WebApp.MVC.Extensions;
-using CWSB.WebApp.MVC.Models;
+﻿using CWSB.Core.Communications;
+using CWSB.Core.Models;
+using CWSB.WebApp.MVC.Extensions;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;

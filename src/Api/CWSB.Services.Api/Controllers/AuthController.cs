@@ -1,5 +1,7 @@
-﻿using CWSB.Services.Api.Extensions;
+﻿using CWSB.Core.Models;
+using CWSB.Services.Api.Extensions;
 using CWSB.Services.Api.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -11,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace CWSB.Services.Api.Controllers
 {

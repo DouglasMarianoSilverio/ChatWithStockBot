@@ -1,4 +1,4 @@
-﻿using CWSB.WebApp.MVC.Models;
+﻿using CWSB.Core.Models;
 using CWSB.WebApp.MVC.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

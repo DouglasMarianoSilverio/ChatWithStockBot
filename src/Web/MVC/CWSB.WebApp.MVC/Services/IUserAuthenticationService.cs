@@ -1,4 +1,4 @@
-﻿using CWSB.WebApp.MVC.Models;
+﻿using CWSB.Core.Models;
 using System.Threading.Tasks;
 
 namespace CWSB.WebApp.MVC.Services
