@@ -3,12 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CWSB.WebApp.MVC.Services
 {
     public abstract class Service
     {
+        protected StringContent GetContent(object data)
+        {
+           return  new StringContent(
+                JsonSerializer.Serialize(data),
+                Encoding.UTF8,
+                "application/json");
+        }
+        
         protected bool HandleErrorsResponse(HttpResponseMessage response)
         {
             switch ((int)response.StatusCode) 
@@ -23,6 +33,17 @@ namespace CWSB.WebApp.MVC.Services
             }
             response.EnsureSuccessStatusCode();
             return true;
+        }
+
+        protected async Task<T> DeserializeResponseObject<T>(HttpResponseMessage responseMessage)
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            return JsonSerializer.Deserialize<T>(await responseMessage.Content.ReadAsStringAsync(), options);
+
         }
     }
 }

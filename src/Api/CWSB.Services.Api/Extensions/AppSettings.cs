@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CWSB.Services.Api.Extensions
+﻿namespace CWSB.Services.Api.Extensions
 {
     public class AppSettings
     {

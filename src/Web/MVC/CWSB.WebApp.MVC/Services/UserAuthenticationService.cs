@@ -1,6 +1,8 @@
-﻿using CWSB.WebApp.MVC.Models;
+﻿using CWSB.WebApp.MVC.Extensions;
+using CWSB.WebApp.MVC.Models;
+using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -9,43 +11,39 @@ namespace CWSB.WebApp.MVC.Services
     public class UserAuthenticationService : Service, IUserAuthenticationService
     {
         private readonly HttpClient _httpClient;
-        const string baseServiceUrl = @"https://localhost:44339";
+        private readonly AppSettings _settings;      
+        
 
-        public UserAuthenticationService(HttpClient httpClient)
+
+
+        public UserAuthenticationService(HttpClient httpClient, IOptions<AppSettings> settings)
         {
             _httpClient = httpClient;
+            _settings = settings.Value;
+            httpClient.BaseAddress = new Uri(_settings.AuthenticationUrl);
         }
 
         public async Task<UserLoginResponse> Login(UserLogin userLogin)
         {
-            var loginContent = new StringContent(
-                JsonSerializer.Serialize(userLogin),
-                Encoding.UTF8,
-                "application/json");
-            var response = await _httpClient.PostAsync($"{baseServiceUrl}/api/identity/login", loginContent);
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
+            var loginContent = GetContent(userLogin);
+            var response = await _httpClient.PostAsync("/api/identity/login", loginContent);
+            
             if (!HandleErrorsResponse(response))
             {
                 return new UserLoginResponse
                 {
-                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                    ResponseResult = await DeserializeResponseObject<ResponseResult>(response)
                 };
             }
-            
-            return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), options);                       
+
+            return await DeserializeResponseObject<UserLoginResponse>(response);            
         }
 
         public async Task<UserLoginResponse> Register(UserRegister userRegister)
         {
-            var registerContent = new StringContent(
-               JsonSerializer.Serialize(userRegister),
-               Encoding.UTF8,
-               "application/json");
-            var response = await _httpClient.PostAsync($"{baseServiceUrl}/api/identity/new-user", registerContent);
+            var registerContent = GetContent(userRegister);
+
+            var response = await _httpClient.PostAsync("/api/identity/new-user", registerContent);
 
             var options = new JsonSerializerOptions
             {
@@ -56,12 +54,12 @@ namespace CWSB.WebApp.MVC.Services
             {
                 return new UserLoginResponse
                 {
-                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                    ResponseResult = await DeserializeResponseObject<ResponseResult>(response)
                 };
             }
 
 
-            return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), options);
+            return await DeserializeResponseObject<UserLoginResponse>(response);
         }
     }
 }

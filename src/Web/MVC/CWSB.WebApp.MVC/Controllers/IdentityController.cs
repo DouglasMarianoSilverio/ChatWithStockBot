@@ -54,7 +54,7 @@ namespace CWSB.WebApp.MVC.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(UserLogin userLogin, string returnUrl = null)
         {
-            //ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(userLogin);
 
             var response = await _authenticationService.Login(userLogin);

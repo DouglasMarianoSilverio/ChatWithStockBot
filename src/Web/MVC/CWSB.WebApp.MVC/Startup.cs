@@ -14,9 +14,21 @@ namespace CWSB.WebApp.MVC
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostEnvironment hostEnvironment)
         {
-            Configuration = configuration;
+            //be ready for multiple enviroments!
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostEnvironment.ContentRootPath)
+                .AddJsonFile(path: "appsetttings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile(path: $"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            if (hostEnvironment.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -26,7 +38,7 @@ namespace CWSB.WebApp.MVC
         {
 
             services.AddIndentityConfiguration();
-            services.AddMVCConfiguration();
+            services.AddMVCConfiguration(Configuration);
             services.RegisterServices();
         }
 
