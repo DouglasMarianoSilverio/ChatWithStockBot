@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CWSB.WebApp.MVC.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +21,8 @@ namespace CWSB.WebApp.MVC.Configuration
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error/500");
+                app.UseStatusCodePagesWithRedirects("/error/{0}");
 
                 app.UseHsts();
             }
@@ -30,7 +32,7 @@ namespace CWSB.WebApp.MVC.Configuration
             app.UseRouting();
 
             app.UseIndentityConfiguration();
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

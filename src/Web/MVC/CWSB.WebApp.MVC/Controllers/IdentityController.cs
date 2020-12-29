@@ -30,7 +30,7 @@ namespace CWSB.WebApp.MVC.Controllers
         [HttpPost]
         [Route("new-account")]
         public async Task<IActionResult> Register(UserRegister userRegister)
-        {
+        {            
             if (!ModelState.IsValid) return View(userRegister);
 
             var response = await _authenticationService.Register(userRegister);

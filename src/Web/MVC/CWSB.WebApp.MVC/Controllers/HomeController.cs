@@ -11,13 +11,6 @@ namespace CWSB.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -28,10 +21,36 @@ namespace CWSB.WebApp.MVC.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("erro/{id:length(3,3)}")]
+        public IActionResult Error(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorModel = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                errorModel.Message = "An error has occured! Please try again later or contact the support.";
+                errorModel.Title = "An error has occured!";
+                errorModel.ErrorCode = id;
+            }
+            else if (id == 404)
+            {
+                errorModel.Message =
+                    "the page you were looking for cannot be found!<br />Please contact support for assistance."; 
+                errorModel.Title = "Ops! Page not found.";
+                errorModel.ErrorCode = id;
+            }
+            else if (id == 403)
+            {
+                errorModel.Message = "You don't have permission for this action.";
+                errorModel.Title = "Access denied";
+                errorModel.ErrorCode = id;
+            }
+            else
+            {
+                return StatusCode(404);
+            }
+
+            return View("Error", errorModel);
         }
     }
 }
