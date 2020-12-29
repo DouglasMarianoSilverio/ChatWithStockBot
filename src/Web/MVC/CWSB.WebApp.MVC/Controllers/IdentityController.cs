@@ -1,11 +1,17 @@
 ﻿using CWSB.WebApp.MVC.Models;
 using CWSB.WebApp.MVC.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CWSB.WebApp.MVC.Controllers
 {
-    public class IdentityController : Controller
+    public class IdentityController : MainController
     {
         private readonly IUserAuthenticationService _authenticationService;
 
@@ -27,11 +33,11 @@ namespace CWSB.WebApp.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(userRegister);
 
-            var result = await _authenticationService.Register(userRegister);
+            var response = await _authenticationService.Register(userRegister);
 
-            //if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
+            if (ResponseHasErrors(response.ResponseResult)) return View(userRegister);
 
-            //await RealizarLogin(resposta);
+            await DoLogin(response);
 
             return RedirectToAction("Index", "Home");
         }
@@ -51,11 +57,11 @@ namespace CWSB.WebApp.MVC.Controllers
             //ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(userLogin);
 
-            var result = await _authenticationService.Login(userLogin);
+            var response = await _authenticationService.Login(userLogin);
 
-            //if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
+            if (ResponseHasErrors(response.ResponseResult)) return View(userLogin);
 
-            //await RealizarLogin(resposta);
+            await DoLogin(response);
 
             if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
 
@@ -66,35 +72,35 @@ namespace CWSB.WebApp.MVC.Controllers
         [Route("exit")]
         public async Task<IActionResult> Logout()
         {
-            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
         private async Task DoLogin(UserLoginResponse response)
         {
-            //var token = ObterTokenFormatado(resposta.AccessToken);
+            var token = GetSecturityToken(response.AccessToken);
 
-            //var claims = new List<Claim>();
-            //claims.Add(new Claim("JWT", resposta.AccessToken));
-            //claims.AddRange(token.Claims);
+            var claims = new List<Claim>();
+            claims.Add(new Claim("JWT", response.AccessToken));
+            claims.AddRange(token.Claims);
 
-            //var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            //var authProperties = new AuthenticationProperties
-            //{
-            //    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
-            //    IsPersistent = true
-            //};
+            var authProperties = new AuthenticationProperties
+            {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+                IsPersistent = true
+            };
 
-            //await HttpContext.SignInAsync(
-            //    CookieAuthenticationDefaults.AuthenticationScheme,
-            //    new ClaimsPrincipal(claimsIdentity),
-            //    authProperties);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
         }
 
-        //private static JwtSecurityToken ObterTokenFormatado(string jwtToken)
-        //{
-        //    return new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
-        //}
+        private static JwtSecurityToken GetSecturityToken(string jwtToken)
+        {
+            return new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
+        }
     }
 }

@@ -1,12 +1,11 @@
-﻿@*@using CWSB.WebApp.MVC.Extensions
-@inject IUser AppUser*@
+﻿@using CWSB.WebApp.MVC.Extensions
+@inject IUser AppUser
 
 <ul class="navbar-nav">
-    @*@if (AppUser.IsAuthenticated())*@
-    @if (Context.User.Identity.IsAuthenticated) 
+    @if (AppUser.IsAuthenticated())    
     {
         <li class="nav-item">
-            @*<a class="nav-link text-dark" title="Manage">Hello @AppUser.GetUserEmail()</a>*@
+            <a class="nav-link text-dark" title="Manage">Hello @AppUser.GetUserEmail()</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Identity" asp-action="Logout">Exit</a>

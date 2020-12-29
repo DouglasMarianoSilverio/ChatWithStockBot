@@ -33,10 +33,7 @@ namespace CWSB.Services.Api.Controllers
         [HttpPost("new-user")]
         public async Task<ActionResult> Register( UserRegister  userRegister)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser
             {
@@ -64,10 +61,7 @@ namespace CWSB.Services.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLogin userLogin)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var result = await _signInManager.PasswordSignInAsync(userLogin.Email, userLogin.Password, false, true);
 

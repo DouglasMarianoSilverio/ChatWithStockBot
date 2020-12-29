@@ -1,4 +1,5 @@
 ﻿
+using CWSB.WebApp.MVC.Extensions;
 using CWSB.WebApp.MVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ namespace CWSB.WebApp.MVC.Configuration
             services.AddHttpClient<IUserAuthenticationService, UserAuthenticationService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddScoped<IUser, AspNetUser>();
+            services.AddScoped<IUser, AspNetUser>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,16 @@ namespace CWSB.Services.Api.Controllers
             })) ;
         }
 
-        //todo - Add function to handle fail fast validations.
+        protected ActionResult CustomResponse(ModelStateDictionary modelState)
+        {
+            var errors = modelState.Values.SelectMany(e => e.Errors);
+            foreach (var error in errors)
+            {
+                AddOperationError(error.ErrorMessage);
+            }
+
+            return CustomResponse();
+        }
 
         private bool ValidOperation()
         {
