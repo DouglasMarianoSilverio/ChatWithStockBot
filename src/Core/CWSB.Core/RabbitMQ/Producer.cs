@@ -1,4 +1,5 @@
-﻿using CWSB.Core.Services;
+﻿using CWSB.Core.Models;
+using CWSB.Core.Services;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace CWSB.Core.RabbitMQ
 {
-    public  class ProducerService : Service
+    public class ProducerService : Service, IProducerService
     {
 
 
-        public Task Produce(string message)
+        public async Task Produce(Post postMessage)
         {
             var connectionFactory = new ConnectionFactory()
             {
@@ -24,28 +25,21 @@ namespace CWSB.Core.RabbitMQ
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                while (true)
-                {                    
+                channel.QueueDeclare(
+                    queue: "tests",
+                    durable: false,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
 
-                    var teste = Console.ReadLine();
+                var messageContent = await GetContent(postMessage).ReadAsStringAsync();
 
-                    channel.QueueDeclare(
-                        queue: "tests",
-                        durable: false,
-                        exclusive: false,
-                        autoDelete: false,
-                        arguments: null);
+                var body = Encoding.UTF8.GetBytes(messageContent);
 
-                     message =
-                        $"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - " +
-                        $"Message content: {teste}";
-                    var body = Encoding.UTF8.GetBytes(message);
-
-                    channel.BasicPublish(exchange: "",
-                                         routingKey: "tests",
-                                         basicProperties: null,
-                                         body: body);
-                }
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "tests",
+                                     basicProperties: null,
+                                     body: body);
             }
         }
 

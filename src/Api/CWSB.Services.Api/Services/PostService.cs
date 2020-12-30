@@ -1,7 +1,6 @@
 ﻿using CWSB.Core.Communications;
 using CWSB.Core.Models;
 using CWSB.Services.Api.Data;
-using CWSB.Services.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,5 @@
-﻿using CWSB.Core.User;
+﻿using CWSB.Core.RabbitMQ;
+using CWSB.Core.User;
 using CWSB.Services.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ namespace CWSB.Services.Api.Configuration
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAspNetUser, AspNetUser>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IProducerService, ProducerService>();
         }
     }
 }

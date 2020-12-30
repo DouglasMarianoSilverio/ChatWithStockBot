@@ -1,4 +1,4 @@
-﻿using CWSB.Services.Api.Models;
+﻿using CWSB.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
