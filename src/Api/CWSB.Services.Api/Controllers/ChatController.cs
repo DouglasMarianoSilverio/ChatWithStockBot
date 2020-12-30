@@ -1,16 +1,14 @@
-﻿using CWSB.Core.User;
+﻿using CWSB.Core.Models;
+using CWSB.Core.User;
 using CWSB.Services.Api.Models;
 using CWSB.Services.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CWSB.Services.Api.Controllers
 {
-    
+
     [Authorize]
     public class ChatController : MainController
     {
@@ -22,14 +20,15 @@ namespace CWSB.Services.Api.Controllers
             _aspNetUser = aspNetUser;
             _postService = postService;
         }
-
-        public IActionResult AddMessage(string message)
+        
+        [HttpPost("new-message")]
+        public async Task<IActionResult> AddMessage(PostCreateRequest message)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = _aspNetUser.GetUserEmail();
 
-            var post = new Post(message, user);
+            var post = new Post(message.Message, user);
 
             var response = _postService.PostMessage(post);
 

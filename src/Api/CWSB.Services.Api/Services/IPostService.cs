@@ -1,4 +1,5 @@
-﻿using CWSB.Services.Api.Models;
+﻿using CWSB.Core.Models;
+using CWSB.Services.Api.Models;
 using System.Threading.Tasks;
 
 namespace CWSB.Services.Api.Services

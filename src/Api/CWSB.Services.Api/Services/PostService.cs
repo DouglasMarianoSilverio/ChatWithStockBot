@@ -1,4 +1,5 @@
 ﻿using CWSB.Core.Communications;
+using CWSB.Core.Models;
 using CWSB.Services.Api.Data;
 using CWSB.Services.Api.Models;
 using System;
@@ -12,6 +13,11 @@ namespace CWSB.Services.Api.Services
     {
 
         private readonly ApplicationDbContext _context;
+
+        public PostService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<PostCreateResponse> PostMessage(Post post)
         {

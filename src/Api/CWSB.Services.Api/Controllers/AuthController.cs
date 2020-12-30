@@ -83,7 +83,8 @@ namespace CWSB.Services.Api.Controllers
 
         private string CodifyToken(ClaimsIdentity identityClaims)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();            
+
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor

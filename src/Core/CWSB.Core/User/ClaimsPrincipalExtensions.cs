@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace CWSB.Core.User
@@ -22,8 +23,8 @@ namespace CWSB.Core.User
             {
                 throw new ArgumentException(nameof(principal));
             }
-
-            var claim = principal.FindFirst("email");
+            var claim = principal.Claims.Where(c => c.Type.Contains("email")).FirstOrDefault();
+                        
             return claim?.Value;
         }
 
