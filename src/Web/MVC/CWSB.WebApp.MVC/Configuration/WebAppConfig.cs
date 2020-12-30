@@ -13,9 +13,10 @@ namespace CWSB.WebApp.MVC.Configuration
         {
             services.AddControllersWithViews();
 
-
             //var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(configuration);
+
+
         }
 
         public static void UseMvcConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)

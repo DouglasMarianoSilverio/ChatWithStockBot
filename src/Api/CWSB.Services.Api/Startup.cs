@@ -39,6 +39,8 @@ namespace CWSB.Services.Api
 
             services.RegisterServices();
 
+            services.AddRabbitMQConfiguration(Configuration);
+
 
         }
 

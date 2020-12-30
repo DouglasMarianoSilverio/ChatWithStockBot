@@ -22,7 +22,7 @@ namespace CWSB.WebApp.MVC.Services
         {
             _httpClient = httpClient;
             _settings = settings.Value;
-            httpClient.BaseAddress = new Uri(_settings.AuthenticationUrl);
+            httpClient.BaseAddress = new Uri(_settings.ServicesUrl);
         }
 
         public async Task<UserLoginResponse> Login(UserLogin userLogin)

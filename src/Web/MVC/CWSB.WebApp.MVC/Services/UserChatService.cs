@@ -4,8 +4,6 @@ using CWSB.Core.Services;
 using CWSB.WebApp.MVC.Extensions;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,13 +19,13 @@ namespace CWSB.WebApp.MVC.Services
         {
             _httpClient = httpClient;
             _settings = settings.Value;
-            httpClient.BaseAddress = new Uri(_settings.AuthenticationUrl);
+            httpClient.BaseAddress = new Uri(_settings.ServicesUrl);
         }
 
         public async Task<PostCreateResponse> SendMessage(PostCreateRequest request)
         {
             var messageContent = GetContent(request);
-            var response = await _httpClient.PostAsync("/api/identity/login", messageContent);
+            var response = await _httpClient.PostAsync("/api/chat/new-message", messageContent);
 
             if (!HandleErrorsResponse(response))
             {

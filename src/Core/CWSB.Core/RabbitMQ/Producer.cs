@@ -1,5 +1,6 @@
 ﻿using CWSB.Core.Models;
 using CWSB.Core.Services;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,21 @@ namespace CWSB.Core.RabbitMQ
 {
     public class ProducerService : Service, IProducerService
     {
+        private readonly RabbitMQConfigurations _rabbitMQConfigurations;
 
+        public ProducerService(IOptions<RabbitMQConfigurations>   rabbitMQConfigurations)
+        {
+            this._rabbitMQConfigurations = rabbitMQConfigurations.Value;
+        }
 
         public async Task Produce(Post postMessage)
         {
             var connectionFactory = new ConnectionFactory()
             {
-                HostName = "localhost",
-                Port = 5672,
-                UserName = "guest",
-                Password = "guest",
+                HostName = _rabbitMQConfigurations.HostName,
+                Port = _rabbitMQConfigurations.Port,
+                UserName = _rabbitMQConfigurations.UserName,
+                Password = _rabbitMQConfigurations.Password,
             };
 
             using (var connection = connectionFactory.CreateConnection())

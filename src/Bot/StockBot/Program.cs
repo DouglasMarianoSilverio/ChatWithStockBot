@@ -15,6 +15,17 @@ namespace StockBot
         static void Main(string[] args)
         {
 
+    //        var builder = new ConfigurationBuilder()
+    //.SetBasePath(Directory.GetCurrentDirectory())
+    //.AddJsonFile($"appsettings.json");
+    //        _configuration = builder.Build();
+
+            
+    //        var rabbitMQConfigurations = new RabbitMQConfigurations();
+    //        new ConfigureFromConfigurationOptions<RabbitMQConfigurations>(
+    //            _configuration.GetSection("RabbitMQConfigurations"))
+    //                .Configure(rabbitMQConfigurations);
+
             var connectionFactory = new ConnectionFactory()
             {
                 HostName = "localhost",
@@ -71,8 +82,8 @@ namespace StockBot
                 Console.ReadKey();
             }
 
-            
-            
+
+
         }
     }
 }

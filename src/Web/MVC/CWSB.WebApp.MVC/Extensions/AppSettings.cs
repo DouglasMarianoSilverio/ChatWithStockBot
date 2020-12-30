@@ -7,7 +7,7 @@ namespace CWSB.WebApp.MVC.Extensions
 {
     public class AppSettings
     {
-        public string AuthenticationUrl { get; set; }
-        public string ChatServiceUrl { get; set; }
+        public string ServicesUrl { get; set; }
+        
     }
 }
