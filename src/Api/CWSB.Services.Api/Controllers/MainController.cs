@@ -43,7 +43,7 @@ namespace CWSB.Services.Api.Controllers
             return !(Errors.Any());
         }
 
-        //protected void AddModelValidationErrors(List<>)
+        
 
         protected void AddOperationError(string error)
         {

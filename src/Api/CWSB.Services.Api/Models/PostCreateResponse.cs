@@ -6,9 +6,5 @@ using System.Threading.Tasks;
 
 namespace CWSB.Services.Api.Models
 {
-    public class PostCreateResponse
-    {
-        public bool Succeeded { get; set; }
-        public ResponseResult ResponseResult { get; set; }
-    }
+
 }

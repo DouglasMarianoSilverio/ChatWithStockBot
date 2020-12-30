@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace CWSB.WebApp.MVC.Extensions
+namespace CWSB.Core.Extensions
 {
     public class CustomHttpRequestException : Exception
     {
