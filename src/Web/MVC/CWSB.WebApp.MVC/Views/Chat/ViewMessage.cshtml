@@ -1,0 +1,34 @@
+﻿@model CWSB.Core.Models.PostCreateRequest
+
+@{
+    ViewData["Title"] = "Message";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <form method="post">
+                <h4>Let´s Chat!</h4>
+                <hr />
+
+                <vc:Summary></vc:Summary>
+
+                <div class="form-group col-lg-6 col-sm-12">
+                    <label asp-for="Message"></label>
+                    <input asp-for="Message" class="form-control" />
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group col-lg-6 col-sm-12">
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+                
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

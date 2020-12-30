@@ -12,6 +12,7 @@ namespace CWSB.Services.Api.Controllers
 {
 
     [Authorize]
+    [Route("api/chat")]
     public class ChatController : MainController
     {
         private readonly IAspNetUser _aspNetUser;
@@ -25,7 +26,7 @@ namespace CWSB.Services.Api.Controllers
             _producerService = producerService;
         }
 
-        [HttpPost("new-message")]
+        [HttpPost("new-message")]        
         public async Task<IActionResult> AddMessage(PostCreateRequest message)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);

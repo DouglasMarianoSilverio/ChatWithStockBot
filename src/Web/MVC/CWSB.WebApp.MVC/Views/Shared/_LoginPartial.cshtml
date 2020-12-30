@@ -2,10 +2,13 @@
 @inject IAspNetUser AppUser
 
 <ul class="navbar-nav">
-    @if (AppUser.IsAuthenticated())    
+    @if (AppUser.IsAuthenticated())
     {
         <li class="nav-item">
             <a class="nav-link text-dark" title="Manage">Hello @AppUser.GetUserEmail()</a>
+        </li>
+        <li class="nav-item" style="padding-right: 30px;">
+            <a class="btn btn-success" asp-controller="Chat" asp-action="ViewMessage">Chat</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Identity" asp-action="Logout">Exit</a>

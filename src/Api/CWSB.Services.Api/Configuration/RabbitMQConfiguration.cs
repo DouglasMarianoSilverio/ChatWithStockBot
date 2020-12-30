@@ -12,7 +12,7 @@ namespace CWSB.Services.Api.Configuration
     {
         public static IServiceCollection AddRabbitMQConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            var rabbitMQConfigurationsSection = configuration.GetSection("AppSettings");
+            var rabbitMQConfigurationsSection = configuration.GetSection("RabbitMQConfigurations");
             services.Configure<RabbitMQConfigurations>(rabbitMQConfigurationsSection);
             return services;
         }

@@ -13,6 +13,8 @@ namespace CWSB.WebApp.MVC.Configuration
         {
             services.AddHttpClient<IUserAuthenticationService, UserAuthenticationService>();
             
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
             services.AddHttpClient<IUserChatService, UserChatService>()
                  .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
