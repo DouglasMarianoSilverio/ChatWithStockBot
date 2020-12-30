@@ -12,10 +12,7 @@ namespace StockBot.Model
         public ResponseResult ResponseResult { get; set; }
 
 
-        public string StockInfo()
-        {
-            return $"{Symbol} quote is ${Close} per share";
-        }
+        
     }
 
 }

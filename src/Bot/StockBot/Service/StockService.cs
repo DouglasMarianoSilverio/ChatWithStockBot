@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace StockBot.Service
 {
     public class StockService : IStockService
     {
+        
         public StockService()
         {
         }
@@ -22,7 +24,8 @@ namespace StockBot.Service
             using (var client = new HttpClient())
             {
                 var url = new Uri($"https://stooq.com/q/l/?s={symbol}&f=sd2t2ohlcv&h&e=csv");
-                using (HttpResponseMessage response = await client.GetAsync(url) )
+
+                using (HttpResponseMessage response = await client.GetAsync(url))
                 {
                     if (!HandleErrorsResponse(response))
                     {
@@ -32,14 +35,21 @@ namespace StockBot.Service
                         };
                     }
 
-                    var reader =  new StreamReader(response.Content.ReadAsStreamAsync().Result);
-
-                    using (var csv = new CsvReader(reader, CultureInfo.CreateSpecificCulture("En-Us")))
+                    using (HttpContent content = response.Content)
+                    using (var stream = (MemoryStream)await content.ReadAsStreamAsync())
+                    using (var sr = new StreamReader(stream))
+                    using (var csvReader = new CsvReader(sr, CultureInfo.InvariantCulture))
                     {
-                        var records = (List<StockResponse>)csv.GetRecords<StockResponse>();
-                        return records[0];
-                        
-                    }
+                        csvReader.Configuration.Delimiter = ",";
+                        csvReader.Configuration.IgnoreBlankLines = true;
+                        csvReader.Configuration.HasHeaderRecord = true;
+                        csvReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();
+                        csvReader.Configuration.MissingFieldFound = null;
+                        csvReader.Read();
+                        csvReader.ReadHeader();
+                        var record = csvReader.GetRecords<StockResponse>().ToList().FirstOrDefault();
+                        return record;
+                    };
                 }
             }
         }
@@ -51,7 +61,7 @@ namespace StockBot.Service
                 case 401:
                 case 403:
                 case 404:
-                case 500:                    
+                case 500:
                 case 400:
                     return false;
             }
