@@ -1,6 +1,7 @@
 ﻿using CWSB.Core.Communications;
 using CWSB.Core.Models;
 using CWSB.Services.Api.Data;
+using CWSB.Services.Api.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,19 @@ namespace CWSB.Services.Api.Services
     public class PostService : IPostService
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly IPostRepository _postRepository;
+        
 
-        public PostService(ApplicationDbContext context)
+        public PostService(IPostRepository postRepository)
         {
-            _context = context;
+            _postRepository = postRepository;
         }
 
         public async Task<PostCreateResponse> PostMessage(Post post)
         {
             try
             {
-                await _context.AddAsync(post);
+                await _postRepository.Add(post);
 
                 return new PostCreateResponse { Succeeded = true };
             }
@@ -37,9 +39,13 @@ namespace CWSB.Services.Api.Services
                 result.Errors.Messages.Add(ex.Message); //not god;
 
                 return new PostCreateResponse { Succeeded = false, ResponseResult = result };
-            }
+            }            
+        }
 
-            
+        public async Task<List<Post>> GetPosts()
+        {
+            var posts = await _postRepository.GetLastPosts();
+            return posts;
         }
     }
 }

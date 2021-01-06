@@ -1,5 +1,6 @@
 ﻿using CWSB.Core.RabbitMQ;
 using CWSB.Core.User;
+using CWSB.Services.Api.Repository;
 using CWSB.Services.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace CWSB.Services.Api.Configuration
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IProducerService, ProducerService>();
             services.AddTransient<IChatHub, ChatHub>();
+            services.AddScoped<IPostRepository, PostRepository>();
         }
     }
 }

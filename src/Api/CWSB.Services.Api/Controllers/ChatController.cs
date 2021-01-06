@@ -53,9 +53,9 @@ namespace CWSB.Services.Api.Controllers
                 }
                 result = response;
             }
-            
 
-            await _hub.Clients.All.SendAsync("ReceiveMessage",post.User,post.Text,post.Date);
+            var posts = await _postService.GetPosts();
+            await _hub.Clients.All.SendAsync("ReceiveMessage", posts);
 
             if (post.IsCommand()) {  _producerService.Produce(post).ConfigureAwait(false) ; }
 
