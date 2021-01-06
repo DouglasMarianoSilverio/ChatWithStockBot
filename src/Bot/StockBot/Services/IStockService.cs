@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockBot.Service
+namespace StockBot.Services
 {
     public interface IStockService
     {

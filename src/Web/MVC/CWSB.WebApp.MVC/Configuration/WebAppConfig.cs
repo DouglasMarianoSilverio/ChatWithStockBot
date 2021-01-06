@@ -21,17 +21,18 @@ namespace CWSB.WebApp.MVC.Configuration
 
         public static void UseMvcConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/error/500");
-                app.UseStatusCodePagesWithRedirects("/error/{0}");
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+              
+            //}
+            app.UseExceptionHandler("/error/500");
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
 
-                app.UseHsts();
-            }
+            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

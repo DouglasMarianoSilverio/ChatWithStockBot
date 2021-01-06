@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Identity;
 
 namespace CWSB.Services.Api
 {
@@ -33,7 +35,7 @@ namespace CWSB.Services.Api
 
             services.AddIndentityConfiguration(Configuration);
 
-            services.AddApiConfiguration();
+            services.AddApiConfiguration(Configuration);
 
             services.AddSwaggerConfiguration();
 
@@ -41,14 +43,18 @@ namespace CWSB.Services.Api
 
             services.AddRabbitMQConfiguration(Configuration);
 
+            services.AddSignalR();
+
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             app.UserSwaggerConfiguration();
 
             app.UseApiConfiguration(env);
+
+            app.InitializeIdentityData(userManager);
 
 
         }

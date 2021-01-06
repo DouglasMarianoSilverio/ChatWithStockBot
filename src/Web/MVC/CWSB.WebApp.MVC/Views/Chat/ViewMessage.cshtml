@@ -1,14 +1,13 @@
 ﻿@model CWSB.Core.Models.PostCreateRequest
 
 @{
-    ViewData["Title"] = "Message";
+    ViewData["Title"] = "Chat";
 }
 
-<h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-md-12">
         <section>
-            <form method="post">
+            <form method="post" data-ajax="true" data-ajax-method="post">
                 <h4>Let´s Chat!</h4>
                 <hr />
 
@@ -19,11 +18,20 @@
                     <input asp-for="Message" class="form-control" />
                     <span asp-validation-for="Message" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-group col-lg-6 col-sm-12">
                     <button type="submit" class="btn btn-primary">Send Message</button>
                 </div>
-                
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+                <div class="container col-6">
+                    <ul class="list-group" id="messagesList"></ul>
+                </div>
+
             </form>
         </section>
     </div>
@@ -31,4 +39,7 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.1.4/signalr.min.js" integrity="sha512-hqwtOj6waHZZoLRoJoLn0tq34JS97tR1QmhM69uvyrt3LVBiR1o0xeOVAskjUFL1L1fahQH2W7IdcMaFbqCEaw==" crossorigin="anonymous"></script>
+    <script src="~/js/chat.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous"></script>   
 }

@@ -14,6 +14,7 @@ namespace CWSB.Services.Api.Configuration
             services.AddScoped<IAspNetUser, AspNetUser>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IProducerService, ProducerService>();
+            services.AddTransient<IChatHub, ChatHub>();
         }
     }
 }

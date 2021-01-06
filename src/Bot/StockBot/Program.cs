@@ -5,8 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using StockBot.Configurations;
 using StockBot.Model;
-using StockBot.Service;
+using StockBot.Services;
 using System;
 using System.IO;
 using System.Text;
@@ -18,9 +19,15 @@ namespace StockBot
     class Program
     {
         private static IConfiguration _configuration;
+        private static IChatAPiServiceClient _signalRClient;
+
+
+        
 
         static void Main(string[] args)
         {
+
+            _signalRClient = new ChatApiServiceClient();
 
             var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -28,11 +35,17 @@ namespace StockBot
 
             _configuration = builder.Build();
 
+            var apiAuthenticationService = new ApiAuthenticationService();
 
             var rabbitMQConfigurations = new RabbitMQConfigurations();
-            new ConfigureFromConfigurationOptions<RabbitMQConfigurations>(
-                _configuration.GetSection("RabbitMQConfigurations"))
-                    .Configure(rabbitMQConfigurations);
+            LoadRabbitMQConfig(rabbitMQConfigurations);
+
+            var botConfiguration = new BotConfiguration();
+            LoadBotConfig(botConfiguration);
+
+            var user = new UserLogin { Email = botConfiguration.User, Password = botConfiguration.Password };
+            UserLoginResponse userToken = apiAuthenticationService.Login(user).Result;
+
 
             var connectionFactory = new ConnectionFactory()
             {
@@ -75,14 +88,16 @@ namespace StockBot
                     var stockInfo = service.GetStock(stockCode).Result;
 
                     var msg_ = stockInfo.GetStockQuoteFormatted();
+
+                    var result = _signalRClient.SendMessage(new PostCreateRequest { Message = msg_ }, userToken).Result;
                 }
 
-
+                channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);
 
             };
 
             channel.BasicConsume(queue: "tests",
-                 autoAck: true,
+                 autoAck: false,
                  consumer: consumer);
 
             Console.WriteLine("Waiting messages to proccess");
@@ -91,6 +106,20 @@ namespace StockBot
 
 
 
+        }
+
+        private static void LoadRabbitMQConfig(RabbitMQConfigurations rabbitMQConfigurations)
+        {
+            new ConfigureFromConfigurationOptions<RabbitMQConfigurations>(
+                            _configuration.GetSection("RabbitMQConfigurations"))
+                                .Configure(rabbitMQConfigurations);
+        }
+
+        private static void LoadBotConfig(BotConfiguration botConfiguration)
+        {
+            new ConfigureFromConfigurationOptions<BotConfiguration>(
+                            _configuration.GetSection("BotConfigurations"))
+                                .Configure(botConfiguration);
         }
 
         private static Post DeserializeObject(string message, JsonSerializerOptions options)

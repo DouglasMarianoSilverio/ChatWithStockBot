@@ -7,7 +7,7 @@ namespace CWSB.WebApp.MVC.Extensions
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            return  View();
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockBot.Service
+namespace StockBot.Services
 {
     public class StockService : IStockService
     {

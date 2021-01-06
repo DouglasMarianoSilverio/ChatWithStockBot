@@ -1,10 +1,6 @@
 ﻿using CWSB.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CWSB.Services.Api.Data
 {
@@ -16,5 +12,6 @@ namespace CWSB.Services.Api.Data
         {
             
         }
+
     }
 }

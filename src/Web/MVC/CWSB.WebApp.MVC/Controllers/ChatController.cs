@@ -32,7 +32,9 @@ namespace CWSB.WebApp.MVC.Controllers
 
             if (ResponseHasErrors(response.ResponseResult)) return View(postMessage);
 
-            return View( new PostCreateRequest());
+            ModelState.Clear();
+
+            return View(new PostCreateRequest());
 
 
         }

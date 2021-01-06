@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CWSB.Services.Api.Configuration
 {
@@ -58,6 +59,23 @@ namespace CWSB.Services.Api.Configuration
         {
             app.UseAuthentication();
             app.UseAuthorization();
+            return app;
+        }
+
+        public static IApplicationBuilder InitializeIdentityData(this IApplicationBuilder app, UserManager<IdentityUser> userManager)
+        {
+            if (userManager.FindByEmailAsync("bot@cwsb.com").Result == null)
+            {
+                var user = new IdentityUser
+                {
+                    UserName = "bot@cwsb.com",
+                    Email = "bot@cwsb.com",
+                    EmailConfirmed = true
+                };
+
+                var result =  userManager.CreateAsync(user, "Bot@5ystem").Result;
+            }
+
             return app;
         }
     }
