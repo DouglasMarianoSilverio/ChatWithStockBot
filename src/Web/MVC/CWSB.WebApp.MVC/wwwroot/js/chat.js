@@ -8,8 +8,10 @@ connection.on("ReceiveMessage", function (messages) {
     $("#messagesList").empty();
 
     
-    messages.forEach(function (m) {        
-        var li = $("<li></li>").text(m.date + " - " + m.user + ": " + m.text);        
+    messages.forEach(function (m) {
+        var _date = new Date(m.date);
+
+        var li = $("<li></li>").text(_date.toLocaleString("en-US") + " - " + m.user + ": " + m.text);        
         li.addClass("list-group-item");
         $("#messagesList").append(li);
     });

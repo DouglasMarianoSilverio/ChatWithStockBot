@@ -1,11 +1,12 @@
 ﻿using CWSB.Core.Models;
 using CWSB.WebApp.MVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace CWSB.WebApp.MVC.Controllers
 {
-    
+    [Authorize]
     public class ChatController : MainController
     {
         private readonly IUserChatService _chatService;

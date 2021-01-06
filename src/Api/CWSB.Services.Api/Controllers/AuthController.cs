@@ -34,7 +34,7 @@ namespace CWSB.Services.Api.Controllers
         }
 
         [HttpPost("new-user")]
-        public async Task<ActionResult> Register( UserRegister  userRegister)
+        public async Task<ActionResult> Register(UserRegister userRegister)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -42,7 +42,7 @@ namespace CWSB.Services.Api.Controllers
             {
                 UserName = userRegister.Email,
                 Email = userRegister.Email,
-                EmailConfirmed = true                
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, userRegister.Password);
@@ -50,9 +50,11 @@ namespace CWSB.Services.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-            }            
+
+                return CustomResponse(await GenerateJwt(userRegister.Email));
+            }
             else
-            {   
+            {
                 foreach (var error in result.Errors)
                 {
                     AddOperationError(error.Description);
@@ -68,22 +70,24 @@ namespace CWSB.Services.Api.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(userLogin.Email, userLogin.Password, false, true);
 
-            
-            if( result.IsLockedOut)
+
+            if (result.Succeeded)
             {
-                AddOperationError("The user has been locked, please wait to try again.");
+                return CustomResponse(await GenerateJwt(userLogin.Email));
             }
-            else if (!result.Succeeded)
+            else if (result.IsLockedOut)
             {
-                AddOperationError("Invalid User/Password.");
+                AddOperationError("User have been failed repeated login attempts.");
             }
 
-            return CustomResponse(await GenerateJwt(userLogin.Email));
+            AddOperationError("Invalid User/Password.");
+
+            return CustomResponse();
         }
 
         private string CodifyToken(ClaimsIdentity identityClaims)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();            
+            var tokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
