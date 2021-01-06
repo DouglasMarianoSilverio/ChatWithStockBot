@@ -20,13 +20,11 @@ I hope you enjoy it!
 * Service to send a message using RabbitMQ.
 * Stock Bot is listening the queue
 * Functionality for Bot to get stock information.
-
-**Not working yet**: 
-* Chat client. I am considering to move it to a new Angular project.
-* This queue behavior is temporary, and don't work with multiple consumers, I will move it  as I progress  on microservices course with RabbitMq and asp.net core.
-* MVC Chat page is not receiving messages.
-
+* Chat client. 
+**Not working**
+There is a problem with MVC Exception Handler. When the httpClient got an error is not redirecting properly. working on it.
 **To-do (Backend)**
-* Implement MessageBus to work with the messages,
-* Implement MediaTr to work with Handlers.
+* Improve the use of RabbitMQ with Servicebus.
+* Transform the bot into a distributed Service.
+
 
