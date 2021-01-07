@@ -1,6 +1,14 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44339/chathub").build();
+
+
+var connection = new signalR.HubConnectionBuilder().withUrl(window._signalRAddress+"/chathub").build();
+
+connection.onclose(() => setTimeout(startSignalRConnection(connection), 5000));
+
+const startSignalRConnection = connection => connection.start()
+    .then(() => console.info('Websocket Connection Established'))
+    .catch(err => console.error('SignalR Connection Error: ', err));
 
 
 connection.on("ReceiveMessage", function (messages) {

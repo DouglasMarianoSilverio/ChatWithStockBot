@@ -20,6 +20,7 @@ namespace CWSB.WebApp.MVC.Controllers
         [Route("Chat")]
         public IActionResult ViewMessage()
         {
+            ViewData["SignalRAddress"] = _chatService.GetServicesUrl();
             return View();
         }
 

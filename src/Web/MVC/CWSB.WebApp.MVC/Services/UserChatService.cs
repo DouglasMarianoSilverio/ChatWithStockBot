@@ -22,6 +22,11 @@ namespace CWSB.WebApp.MVC.Services
             httpClient.BaseAddress = new Uri(_settings.ServicesUrl);
         }
 
+        public string GetServicesUrl()
+        {
+            return _settings.ServicesUrl;
+        }
+
         public async Task<PostCreateResponse> SendMessage(PostCreateRequest request)
         {
             var messageContent = GetContent(request);
