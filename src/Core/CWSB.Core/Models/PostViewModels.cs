@@ -10,7 +10,7 @@ namespace CWSB.Core.Models
     public class PostCreateRequest
     {
         [Required(ErrorMessage = "Field {0} is required.")]
-        [StringLength(255, ErrorMessage = "Field {0} must be between {2} and {1} characters.", MinimumLength = 2)]
+        [StringLength(255, ErrorMessage = "Field {0} must be between {2} and {1} characters.", MinimumLength = 2)]                
         public string Message { get; set; }        
     }
     

@@ -31,6 +31,8 @@ namespace StockBot.Services
                     {
                         return new StockResponse
                         {
+                            Succeeded = false,
+                            Symbol = symbol,
                             ResponseResult = new ResponseResult { }
                         };
                     }
@@ -48,6 +50,7 @@ namespace StockBot.Services
                         csvReader.Read();
                         csvReader.ReadHeader();
                         var record = csvReader.GetRecords<StockResponse>().ToList().FirstOrDefault();
+                        record.Succeeded = true;
                         return record;
                     };
                 }

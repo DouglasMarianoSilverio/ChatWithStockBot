@@ -1,29 +1,31 @@
 ﻿using CWSB.Core.Communications;
 using CWSB.Core.Models;
 using CWSB.Core.Services;
-using Microsoft.Extensions.Options;
+using StockBot.Configurations;
 using System;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace StockBot.Services
 {
     public class ApiAuthenticationService : Service, IApiAuthenticationService
     {
-        public ApiAuthenticationService()
-        {            
+
+        private readonly BotConfiguration _botConfiguration;
+        private HttpClient _httpClient;
+        public ApiAuthenticationService(BotConfiguration configuration)
+        {
+            _botConfiguration = configuration;
+            _httpClient = new HttpClient() { BaseAddress = new Uri(configuration.ServicesUrl )};
         }
 
-        public async Task<UserLoginResponse> Login(UserLogin userLogin)
+        public async Task<UserLoginResponse> Login()
         {
+            var userLogin = new UserLogin { Email = _botConfiguration.User, Password = _botConfiguration.Password };
             var loginContent = GetContent(userLogin);
 
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44339");
-            
 
-            var response = await client.PostAsync("/api/identity/login", loginContent);
+            var response = await _httpClient.PostAsync("/api/identity/login", loginContent);
             
             if (!HandleErrorsResponse(response))
             {

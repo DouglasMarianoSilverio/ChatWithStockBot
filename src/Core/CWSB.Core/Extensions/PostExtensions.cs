@@ -11,6 +11,8 @@ namespace CWSB.Core.Extensions
         
         public static bool IsCommand(this Post post) => post.Text.StartsWith("/stock");
 
+        public static bool IsInvalidCommand(this Post post) => post.Text.Equals("/stock=");
+
         public static string GetStockFromCommand(this Post post)
         {
             if (!post.IsCommand()) return null;            

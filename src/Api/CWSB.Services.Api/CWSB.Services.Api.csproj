@@ -25,5 +25,9 @@
     <ProjectReference Include="..\..\Core\CWSB.Core\CWSB.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 
 </Project>

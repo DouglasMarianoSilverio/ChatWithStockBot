@@ -19,7 +19,8 @@ namespace StockBot
     class Program
     {
         private static IConfiguration _configuration;
-        private static IChatAPiServiceClient _signalRClient;
+        private static IChatAPiServiceClient _chatApiServiceClient;
+        private static IApiAuthenticationService _apiAuthenticationService;
 
 
         
@@ -27,7 +28,7 @@ namespace StockBot
         static void Main(string[] args)
         {
 
-            _signalRClient = new ChatApiServiceClient();
+
 
             var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -35,25 +36,18 @@ namespace StockBot
 
             _configuration = builder.Build();
 
-            var apiAuthenticationService = new ApiAuthenticationService();
-
             var rabbitMQConfigurations = new RabbitMQConfigurations();
             LoadRabbitMQConfig(rabbitMQConfigurations);
 
             var botConfiguration = new BotConfiguration();
             LoadBotConfig(botConfiguration);
 
+            _chatApiServiceClient = new ChatApiServiceClient(botConfiguration);
+            _apiAuthenticationService = new ApiAuthenticationService(botConfiguration);
+
             var user = new UserLogin { Email = botConfiguration.User, Password = botConfiguration.Password };
-            UserLoginResponse userToken = apiAuthenticationService.Login(user).Result;
-
-
-            var connectionFactory = new ConnectionFactory()
-            {
-                HostName = rabbitMQConfigurations.HostName,
-                Port = rabbitMQConfigurations.Port,
-                UserName = rabbitMQConfigurations.UserName,
-                Password = rabbitMQConfigurations.Password
-            };
+            var userToken = _apiAuthenticationService.Login().Result;
+            ConnectionFactory connectionFactory = GetConnectionFactory(rabbitMQConfigurations);
 
             using var connection = connectionFactory.CreateConnection();
             using var channel = connection.CreateModel();
@@ -79,8 +73,13 @@ namespace StockBot
                     PropertyNameCaseInsensitive = true
                 };
                 Post post = DeserializeObject(message, options);
+                
+                if (post.IsInvalidCommand())
+                {
+                    var result = _chatApiServiceClient.SendMessage(new PostCreateRequest { Message = $"{post.User} you must enter a Symbol to use the command, like /stock=xp.us" }, userToken).Result;
+                }
 
-                if (post.IsCommand())
+                else if (post.IsCommand())
                 {
                     IStockService service = new StockService();
                     var stockCode = post.GetStockFromCommand();
@@ -89,7 +88,7 @@ namespace StockBot
 
                     var msg_ = stockInfo.GetStockQuoteFormatted();
 
-                    var result = _signalRClient.SendMessage(new PostCreateRequest { Message = msg_ }, userToken).Result;
+                    var result = _chatApiServiceClient.SendMessage(new PostCreateRequest { Message = msg_ }, userToken).Result;
                 }
 
                 channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);
@@ -106,6 +105,17 @@ namespace StockBot
 
 
 
+        }
+
+        private static ConnectionFactory GetConnectionFactory(RabbitMQConfigurations rabbitMQConfigurations)
+        {
+            return new ConnectionFactory()
+            {
+                HostName = rabbitMQConfigurations.HostName,
+                Port = rabbitMQConfigurations.Port,
+                UserName = rabbitMQConfigurations.UserName,
+                Password = rabbitMQConfigurations.Password
+            };
         }
 
         private static void LoadRabbitMQConfig(RabbitMQConfigurations rabbitMQConfigurations)

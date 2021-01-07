@@ -9,9 +9,9 @@ namespace StockBot.Model
         public string Symbol { get; set; }
         public string Close { get; set; }
 
+        public bool Succeeded { get; set; }
+
         public ResponseResult ResponseResult { get; set; }
-
-
         
     }
 

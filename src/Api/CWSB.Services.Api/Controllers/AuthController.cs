@@ -1,6 +1,5 @@
 ﻿using CWSB.Core.Models;
 using CWSB.Services.Api.Extensions;
-using CWSB.Services.Api.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
