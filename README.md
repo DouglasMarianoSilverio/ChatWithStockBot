@@ -21,8 +21,6 @@ I hope you enjoy it!
 * Stock Bot is listening the queue
 * Functionality for Bot to get stock information.
 * Chat client. 
-**Not working**
-There is a problem with MVC Exception Handler. When the httpClient got an error is not redirecting properly. working on it.
 **To-do (Backend)**
 * Improve the use of RabbitMQ with Servicebus.
 * Transform the bot into a distributed Service.
