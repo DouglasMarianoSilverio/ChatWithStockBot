@@ -21,6 +21,7 @@ I hope you enjoy it!
 * Stock Bot is listening the queue
 * Functionality for Bot to get stock information.
 * Chat client. 
+
 **To-do (Backend)**
 * Improve the use of RabbitMQ with Servicebus.
 * Transform the bot into a distributed Service.
